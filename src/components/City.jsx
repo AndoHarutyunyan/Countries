@@ -74,12 +74,13 @@ export default function (props) {
           newArray.push(arr[i]);
         }
       }
-      return newArray.length>0? newArray:"Not Found";
+      return newArray.length > 0 ? newArray : "Not Found";
     }
   }
 
   return (
     <>
+    <h1 style={{textAlign: "center"}}>Country information</h1>
       {cityInfo ? (
         <div>
           <div>Name: {cityInfo.name}</div>
@@ -96,19 +97,21 @@ export default function (props) {
         value={searchValue}
         onChange={onChangevalue}
       />
-      {searchValue && Array.isArray(searchCity(searchValue, allCitys))
-        ? searchCity(searchValue, allCitys).map((el) => (
-            <div key={el.name}>
-              <CityDiv
-                onClick={() => {
-                  SeeInfoCity(el);
-                }}
-              >
-                {el.name}
-              </CityDiv>
-            </div>
-          ))
-              :searchValue?<div>{searchCity(searchValue, allCitys)}</div>:null}
+      {searchValue && Array.isArray(searchCity(searchValue, allCitys)) ? (
+        searchCity(searchValue, allCitys).map((el) => (
+          <div key={el.name}>
+            <CityDiv
+              onClick={() => {
+                SeeInfoCity(el);
+              }}
+            >
+              {el.name}
+            </CityDiv>
+          </div>
+        ))
+      ) : searchValue ? (
+        <div>{searchCity(searchValue, allCitys)}</div>
+      ) : null}
       <WrrapCityDiv
         style={searchValue ? { display: "none" } : { display: "flex" }}
       >

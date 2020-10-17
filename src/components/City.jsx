@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
+import { NotSeeSearchValue, SeeSearchValue } from "../action/ActionCity";
 
 const WrrapCityDiv = styled.div`
+  display: ${(props) => (props.thereIsSearchvalue ? "none" : "flex")};
   justify-content: space-between;
   padding: 10px;
 `;
@@ -21,7 +24,7 @@ const InputSearch = styled.input``;
 // https://restcountries.eu/rest/v2/region/{region}
 // https://restcountries.eu/rest/v2/all
 
-export default function (props) {
+function City(props) {
   const region = ["africa", "americas", "asia", "europe", "oceania"];
   const [allCitys, setAllCitys] = useState();
   const [afrika, setAfrika] = useState();
@@ -63,6 +66,9 @@ export default function (props) {
   useEffect(AllCityfetch, []);
   function onChangevalue(e) {
     setSearchvalue(e.target.value);
+    e.target.value
+      ? props.dispatch(SeeSearchValue())
+      : props.dispatch(NotSeeSearchValue());
   }
   function searchCity(city, arr) {
     let newArray = [];
@@ -78,9 +84,11 @@ export default function (props) {
     }
   }
 
+  console.log(props.thereIsSearchvalue);
+
   return (
     <>
-    <h1 style={{textAlign: "center"}}>Country information</h1>
+      <h1 style={{ textAlign: "center" }}>Country information</h1>
       {cityInfo ? (
         <div>
           <div>Name: {cityInfo.name}</div>
@@ -112,9 +120,7 @@ export default function (props) {
       ) : searchValue ? (
         <div>{searchCity(searchValue, allCitys)}</div>
       ) : null}
-      <WrrapCityDiv
-        style={searchValue ? { display: "none" } : { display: "flex" }}
-      >
+      <WrrapCityDiv thereIsSearchvalue={props.thereIsSearchvalue}>
         <div style={{ marginLeft: "0" }}>
           <h1>Africa</h1>
           {Array.isArray(afrika)
@@ -199,3 +205,9 @@ export default function (props) {
     </>
   );
 }
+const mapStateToProps = (state) => {
+  return {
+    thereIsSearchvalue: state.thereIsSearchvalue,
+  };
+};
+export default connect(mapStateToProps)(City);
